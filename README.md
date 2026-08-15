@@ -24,6 +24,16 @@
 
 ---
 
+## ✦ Preview
+
+<p align="center">
+  <img src="asset/S/s1.png" alt="Calculator Preview" width="400" />
+  <img src="asset/S/s2.png" alt="Calculator Preview" width="400" />
+  <img src="asset/S/s3.png" alt="Calculator Preview" width="400" />
+</p>
+
+---
+
 ## 🌌 About the Game
 
 **Neon Space Runner** is a browser-based endless runner built with vanilla **JavaScript**, styled entirely with **Tailwind CSS v4**, and brought to life with a custom **Web Audio API** sound engine — no audio files, every sound effect is synthesized in real time with oscillators.
