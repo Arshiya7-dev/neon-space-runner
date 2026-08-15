@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+    --font-orbitron: "Orbitron", "sans-serif";
+    --animate-gridMove: gridMove 1s linear infinite;
+    --animate-walk: walk 0.5s infinite alternate ease-in-out;
+    --animate-floatCoin: floatCoin 1s ease-in-out infinite alternate;
+    --animate-speedUpFlash: speedUpFlash 1.5s forwards;
+
+    @keyframes gridMove {
+        0% {
+            background-position: 0 0;
+        }
+
+        100% {
+            background-position: 0 60px;
+        }
+    }
+
+    @keyframes walk {
+        from {
+            transform: rotate(15deg);
+        }
+
+        to {
+            transform: rotate(-15deg);
+        }
+    }
+
+    @keyframes floatCoin {
+        from {
+            transform: translateY(0);
+        }
+
+        to {
+            transform: translateY(-15px);
+        }
+    }
+
+    @keyframes speedUpFlash {
+        0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+        }
+
+        20% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        80% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+    }
+}
+
+@layer base {
+    body {
+        @apply font-orbitron bg-[#050510] overflow-hidden h-screen w-screen cursor-pointer;
+    }
+}
+
+@layer components {
+    .game-container {
+        @apply relative w-screen h-screen bg-cover bg-center bg-no-repeat bg-fixed overflow-hidden bg-[url('../img/39612.jpg')];
+    }
+
+    .grid-floor {
+        @apply absolute bottom-0 w-full h-[20vh] z-[2];
+        perspective: 120px;
+        background-image: linear-gradient(to bottom, rgba(5, 5, 16, 0), rgba(5, 5, 16, 0.85));
+    }
+
+    .grid-lines {
+        @apply absolute top-0 left-[-50%] w-[200%] h-full animate-gridMove;
+        background-image:
+            linear-gradient(rgba(0, 255, 255, 0.7) 2px, transparent 2px),
+            linear-gradient(90deg, rgba(0, 255, 255, 0.7) 2px, transparent 2px);
+        background-size: 60px 60px;
+        transform: rotateX(60deg);
+        box-shadow: 0 0 20px #00ffff;
+    }
+
+    .horizon-line {
+        @apply absolute bottom-[20vh] w-full h-1 bg-[#00ffff] z-[2];
+        box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+    }
+
+    .player {
+        @apply absolute bottom-[20vh] left-[10vw] w-20 h-[90px] z-10 [filter:drop-shadow(0_0_10px_#00ffff)_drop-shadow(0_0_20px_#00ffff)] transition-[filter] duration-100;
+    }
+
+    .explosion-particle {
+        @apply absolute w-2 h-2 bg-[#ff00ff] rounded-full z-[15] pointer-events-none;
+        box-shadow: 0 0 10px #ff00ff;
+    }
+
+    .obstacle {
+        @apply absolute bottom-[20vh] z-[5] border-2 border-[#ff00ff] rounded-lg [&::after]:content-[''] [&::after]:absolute [&::after]:top-[-8px] [&::after]:left-[-4px] [&::after]:right-[-4px] [&::after]:h-[14px] [&::after]:bg-[#ff00ff] [&::after]:rounded-lg;
+        background-color: rgba(255, 0, 255, 0.2);
+        box-shadow: 0 0 20px #ff00ff, inset 0 0 20px #ff00ff;
+
+        &::after {
+            box-shadow: 0 0 20px #ff00ff;
+        }
+    }
+
+    .coin {
+        @apply absolute w-10 h-10 z-[5] text-[#ffeb3b] text-3xl flex justify-center items-center [filter:drop-shadow(0_0_8px_#ffeb3b)_drop-shadow(0_0_15px_#ffeb3b)] animate-floatCoin;
+    }
+
+    .ui-stars {
+        @apply absolute top-10 left-[50px] z-[20] text-[#ffeb3b] text-3xl font-black flex items-center gap-2.5;
+        text-shadow: 0 0 15px #ffeb3b, 0 0 3px #000;
+    }
+
+    .ui-score {
+        @apply absolute top-10 right-[50px] z-[20] text-[#00ffff] text-3xl font-black;
+        text-shadow: 0 0 15px #00ffff, 0 0 3px #000
+    }
+
+    .ui-highscore {
+        @apply absolute top-20 right-[50px] z-[20] text-[#ff00ff] text-lg font-bold;
+        text-shadow: 0 0 10px #ff00ff, 0 0 3px #000;
+    }
+
+    .speed-up-text {
+        @apply absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#ffeb3b] text-[80px] font-black z-[50] opacity-0 pointer-events-none;
+        text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
+    }
+
+    .overlay {
+        @apply absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center z-[100] transition-opacity duration-500;
+        background-color: rgba(5, 5, 16, 0.85);
+        backdrop-filter: blur(8px);
+    }
+
+    .neon-btn {
+        @apply bg-transparent border-[3px] border-[#00ffff] text-[#00ffff] py-5 px-[60px] font-orbitron text-[28px] font-bold uppercase cursor-pointer transition-all duration-300 hover:bg-[#00ffff] hover:text-[#050510];
+        box-shadow: 0 0 20px #00ffff, inset 0 0 20px rgba(0, 255, 255, 0.2);
+        text-shadow: 0 0 10px #00ffff;
+
+        &:hover {
+            box-shadow: 0 0 40px #00ffff, 0 0 80px #00ffff;
+        }
+    }
+}
+
+@layer utilities {
+    .hidden {
+        @apply opacity-0 pointer-events-none;
+    }
+
+    .speed-up-text.show {
+        @apply animate-speedUpFlash;
+    }
+
+    .player .leg-left,
+    .player .leg-right {
+        @apply [transform-origin:top_center] animate-walk;
+    }
+
+    .player .leg-right {
+        @apply [animation-delay:0.25s];
+    }
+
+    .player.jumping .leg-left,
+    .player.jumping .leg-right {
+        @apply [animation:none] [transform:rotate(0deg)];
+    }
+
+    .overlay h1 {
+        @apply text-[80px] text-white mb-5;
+        text-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+    }
+
+    .overlay h2 {
+        @apply text-4xl text-[#00ffff] mb-10;
+        text-shadow: 0 0 15px #00ffff;
+    }
+
+    .overlay p {
+        @apply text-[#ccc] mb-[50px] text-xl tracking-[2px] text-center;
+        text-shadow: 0 0 5px #000;
+    }
+}
+
+/* npx @tailwindcss/cli -i ./asset/stylesheet/main.css -o ./asset/stylesheet/output.css --watch */
